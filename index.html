@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Peminjaman Barang | Beranda</title>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Shared Style System -->
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .portal-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .portal-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .portal-header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .portal-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+            max-width: 600px;
+        }
+
+        .portal-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 900px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @media (min-width: 768px) {
+            .portal-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .portal-card {
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .portal-card:hover::before {
+            opacity: 1;
+        }
+
+        .portal-card-klien::before {
+            background: linear-gradient(135deg, var(--secondary-glow), transparent);
+        }
+
+        .portal-card * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .portal-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .portal-card:hover .portal-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .portal-card-admin .portal-icon-wrapper {
+            color: var(--primary);
+            box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.1);
+        }
+
+        .portal-card-admin:hover .portal-icon-wrapper {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 25px var(--primary-glow);
+            border-color: var(--primary);
+        }
+
+        .portal-card-klien .portal-icon-wrapper {
+            color: var(--secondary);
+            box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.1);
+        }
+
+        .portal-card-klien:hover .portal-icon-wrapper {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 0 25px var(--secondary-glow);
+            border-color: var(--secondary);
+        }
+
+        .portal-card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .portal-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .portal-stats {
+            margin-top: 4rem;
+            display: flex;
+            gap: 2.5rem;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        .divider {
+            width: 1px;
+            background: var(--border-color);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-container">
+        <!-- Header -->
+        <header class="portal-header">
+            <h1>Sistem Peminjaman Barang</h1>
+            <p>Aplikasi pengelolaan dan peminjaman inventaris kantor berbasis basis data lokal. Pilih gerbang masuk Anda di bawah ini.</p>
+        </header>
+
+        <!-- Selection Cards -->
+        <div class="portal-cards">
+            <!-- Card Admin -->
+            <div class="portal-card portal-card-admin glass-panel glass-card" onclick="location.href='admin/index.html'">
+                <div class="portal-icon-wrapper">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h2>Portal Admin</h2>
+                <p>Kelola daftar barang/produk, data pengguna, setujui/tolak permohonan peminjaman, serta akses data pencadangan database.</p>
+                <button class="btn btn-primary">Masuk Admin <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+            </div>
+
+            <!-- Card Klien -->
+            <div class="portal-card portal-card-klien glass-panel glass-card" onclick="location.href='klien/index.html'">
+                <div class="portal-icon-wrapper">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h2>Portal Klien</h2>
+                <p>Lihat katalog produk yang tersedia secara real-time, lakukan peminjaman barang, dan pantau status barang yang sedang Anda pinjam.</p>
+                <button class="btn btn-secondary">Masuk Klien <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+            </div>
+        </div>
+
+        <!-- Real-time Stats from LocalStorage -->
+        <div class="portal-stats">
+            <div class="stat-item">
+                <div class="stat-val" id="stat-produk">0</div>
+                <div class="stat-label">Produk</div>
+            </div>
+            <div class="divider"></div>
+            <div class="stat-item">
+                <div class="stat-val" id="stat-pengguna">0</div>
+                <div class="stat-label">Pengguna</div>
+            </div>
+            <div class="divider"></div>
+            <div class="stat-item">
+                <div class="stat-val" id="stat-peminjaman">0</div>
+                <div class="stat-label">Peminjaman</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DB JS Reference -->
+    <script src="js/db.js"></script>
+    <script>
+        function updatePortalStats() {
+            try {
+                const prodCount = dbProduct.getAll().length;
+                const userCount = dbUser.getAll().length;
+                const loanCount = dbRequest.getAll().filter(r => r.IS_PINJAM).length;
+                
+                document.getElementById('stat-produk').innerText = prodCount;
+                document.getElementById('stat-pengguna').innerText = userCount;
+                document.getElementById('stat-peminjaman').innerText = loanCount;
+            } catch (e) {
+                console.error("Failed to load portal stats", e);
+            }
+        }
+        
+        // Initial load
+        updatePortalStats();
+        
+        // Listen for changes
+        window.addEventListener('storage', updatePortalStats);
+    </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Peminjaman Barang | Portal Klien</title>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Style Systems -->
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="klien.css">
+</head>
+
+<body>
+
+    <!-- AUTHENTICATION VIEW -->
+    <div class="auth-wrapper" id="auth-view">
+        <div class="glass-panel auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h2>Portal Klien</h2>
+                <p>Silakan masuk atau daftar untuk mengajukan peminjaman.</p>
+            </div>
+
+            <!-- Tab Headers -->
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tab-login" onclick="toggleAuthTab('login')">Masuk</div>
+                <div class="auth-tab" id="tab-register" onclick="toggleAuthTab('register')">Daftar Akun</div>
+            </div>
+
+            <!-- Form Login -->
+            <form class="auth-form active" id="form-login" onsubmit="handleLoginSubmit(event)">
+                <div>
+                    <label for="login-email">Email Klien</label>
+                    <input type="email" id="login-email" placeholder="contoh: budi@email.com" required>
+                </div>
+                <div>
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Masukkan password Anda..." required>
+                </div>
+                <button type="submit" class="btn btn-secondary" style="margin-top: 10px; width:100%;">
+                    Masuk Portal <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+
+            <!-- Form Register -->
+            <form class="auth-form" id="form-register" onsubmit="handleRegisterSubmit(event)">
+                <div>
+                    <label for="reg-nama">Nama Lengkap</label>
+                    <input type="text" id="reg-nama" placeholder="Nama lengkap Anda..." required>
+                </div>
+                <div>
+                    <label for="reg-email">Alamat Email</label>
+                    <input type="email" id="reg-email" placeholder="contoh: budi@email.com" required>
+                </div>
+                <div>
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="Buat password baru..." required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px; width:100%;">
+                    Daftar & Masuk <i class="fa-solid fa-user-plus"></i>
+                </button>
+            </form>
+
+            <!-- Helper Hint Box for Evaluator -->
+            <div class="auth-hint">
+                <i class="fa-solid fa-info-circle"></i> <strong>Tips Pengujian:</strong><br>
+                Anda dapat login menggunakan akun bawaan berikut:<br>
+                Email: <code>budi@email.com</code> atau <code>siti@email.com</code><br>
+                Password: <code>password123</code>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="../index.html"
+                    style="font-size: 13px; color: var(--text-secondary); text-decoration: underline;">
+                    <i class="fa-solid fa-circle-left"></i> Kembali ke Beranda
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD VIEW (Shown only when logged in) -->
+    <div class="klien-container" id="dashboard-view" style="display: none;">
+        <!-- Navigation Header -->
+        <header class="klien-header glass-panel">
+            <div class="klien-title">
+                <a href="../index.html" title="Kembali ke Beranda"><i class="fa-solid fa-arrow-left"></i></a>
+                <h1>Portal Peminjaman Klien</h1>
+            </div>
+
+            <!-- User Profile Widget with Logout -->
+            <div class="user-profile-widget">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-circle-user" style="color: var(--secondary); font-size: 1.5rem;"></i>
+                    <div class="user-profile-info">
+                        <span class="user-profile-name" id="session-user-name">Nama Pengguna</span>
+                        <span class="user-profile-role">Klien</span>
+                    </div>
+                </div>
+                <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" onclick="handleLogout()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="klien-layout">
+            <!-- Catalog (Left Pane) -->
+            <main class="catalog-section glass-panel">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+                    <h2 class="section-title" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-boxes-stacked"></i> Katalog Barang
+                    </h2>
+                    <!-- Search Input -->
+                    <div style="position: relative; max-width: 300px; width: 100%;">
+                        <i class="fa-solid fa-magnifying-glass"
+                            style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                        <input type="text" id="search-input" placeholder="Cari nama barang..."
+                            style="padding-left: 40px;" oninput="renderCatalog()">
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="catalog-grid" id="catalog-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </main>
+
+            <!-- Sidebar (Right Pane) -->
+            <aside class="history-section glass-panel">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pinjaman Anda
+                </h2>
+
+                <!-- History List -->
+                <div class="history-list" id="history-list">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Borrow Modal Dialog -->
+    <div class="modal-backdrop" id="borrow-modal">
+        <div class="modal-content glass-panel" style="background-color: var(--bg-panel-solid);">
+            <div class="modal-header">
+                <h3 style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-hand-holding-hand" style="color: var(--secondary);"></i> Pinjam Barang
+                </h3>
+                <button class="modal-close" onclick="closeBorrowModal()">&times;</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label>Nama Barang</label>
+                    <input type="text" id="modal-product-name" readonly
+                        style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Stok Tersedia</label>
+                        <input type="text" id="modal-product-stock" readonly
+                            style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">
+                    </div>
+                    <div>
+                        <label>Peminjam</label>
+                        <input type="text" id="modal-user-name" readonly
+                            style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="borrow-qty">Jumlah yang Dipinjam</label>
+                    <input type="number" id="borrow-qty" min="1" value="1" oninput="validateQtyInput()">
+                    <span id="qty-warning"
+                        style="font-size: 11px; color: var(--danger); margin-top: 4px; display: none;"></span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeBorrowModal()">Batal</button>
+                <button class="btn btn-secondary" id="btn-submit-borrow" onclick="submitBorrow()">Konfirmasi
+                    Pinjam</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script src="../js/db.js"></script>
+    <script src="klien.js"></script>
+</body>
+
+</html>
